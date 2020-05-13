@@ -33,4 +33,14 @@ router.route(`${CONTROLLER_NAME}/:questionId`)
         }
     })
 
+router.route(`${CONTROLLER_NAME}/:questionId/like`)
+    .post(async (req, res, next) => {
+        try {
+            req.result = await service.like(req.params.questionId);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    })
+
 export default router;

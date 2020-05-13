@@ -18,8 +18,18 @@ export async function insert(question) {
 
     document.creationDate = new Date();
     document.numberOfAnswers = 0;
+    document.likes = 0;
 
     return await collection.insertOne(document);
+}
+
+export async function like(questionId) {
+    const question = await findById(questionId);
+    question.likes++;
+
+    const _id = { _id: new ObjectId(questionId) };
+
+    await collection.updateOne(_id, question);
 }
 
 const getDocument = ({ question, user }) => Object.assign({},
