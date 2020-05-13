@@ -7,6 +7,7 @@ let mongoCollection = (collectionName) => {
         findOne: async (document, projection) => await collection(collectionName).findOne(document, { projection }),
         insertOne: async (document) => await collection(collectionName).insertOne(document),
         updateOne: async (id, document) => await collection(collectionName).updateOne(id, { $set: document }),
+        incrementOne: async (id, document) => await collection(collectionName).updateOne(id, { $inc: document }),
         deleteOne: async (id) => await collection(collectionName).deleteOne(id),
         count: async (document) => await collection(collectionName).aggregate([{ $match: document }, { $count: "size" }]).toArray()
     }

@@ -15,4 +15,14 @@ router.route(CONTROLLER_NAME)
         }
     })
 
+router.route(`${CONTROLLER_NAME}/:position/like`)
+    .post(async (req, res, next) => {
+        try {
+            req.result = await service.like(req.params.questionId, req.params.position);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    })
+
 export default router;
