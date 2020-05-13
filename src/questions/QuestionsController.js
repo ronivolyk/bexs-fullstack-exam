@@ -23,4 +23,14 @@ router.route(CONTROLLER_NAME)
         }
     })
 
+router.route(`${CONTROLLER_NAME}/:questionId`)
+    .get(async (req, res, next) => {
+        try {
+            req.result = await service.findById(req.params.questionId);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    })
+
 export default router;
