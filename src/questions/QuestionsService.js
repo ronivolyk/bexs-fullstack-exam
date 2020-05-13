@@ -24,12 +24,9 @@ export async function insert(question) {
 }
 
 export async function like(questionId) {
-    const question = await findById(questionId);
-    question.likes++;
-
     const _id = { _id: new ObjectId(questionId) };
 
-    await collection.updateOne(_id, question);
+    await collection.incrementOne(_id, { likes: 1 });
 }
 
 const getDocument = ({ question, user }) => Object.assign({},
