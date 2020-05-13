@@ -6,7 +6,7 @@ const COLLECTION_NAME = 'questions';
 const collection = mongoCollection(COLLECTION_NAME);
 
 export async function listAll() {
-    return await collection.find({});
+    return await collection.find({}, { answers: 0 });
 }
 
 export async function findById(questionId) {
