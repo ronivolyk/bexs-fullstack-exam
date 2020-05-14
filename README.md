@@ -10,7 +10,7 @@ $ npm install
 $ npm start
 ```
 
-## API
+## API Documentation
 
 ### **Questions**
 
