@@ -8,7 +8,7 @@ let router = express.Router();
 router.route(CONTROLLER_NAME)
     .get(async (req, res, next) => {
         try {
-            req.result = await service.listAll();
+            req.result = await service.list(req.query);
             next();
         } catch (err) {
             next(err);

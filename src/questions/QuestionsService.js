@@ -5,8 +5,9 @@ const COLLECTION_NAME = 'questions';
 
 const collection = mongoCollection(COLLECTION_NAME);
 
-export async function listAll() {
-    return await collection.find({}, { answers: 0 });
+export async function list(query) {
+    const searchObject = getSearchObject(query);
+    return await collection.find(searchObject, { answers: 0 });
 }
 
 export async function findById(questionId) {
@@ -32,4 +33,9 @@ export async function like(questionId) {
 const getDocument = ({ question, user }) => Object.assign({},
     { question },
     { user }
+);
+
+const getSearchObject = ({ search, hideAnswered }) => Object.assign({},
+    search ? { question: { $regex: search.trim().replace(/[\?\.]/g, ''), $options: 'i' } } : {},
+    hideAnswered === 'true' ? { numberOfAnswers: 0 } : {}
 );
