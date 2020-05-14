@@ -12,8 +12,6 @@ $ npm start
 
 ## API Documentation
 
-### **Questions**
-
 ---
 
 > ### Get a list of all questions or of filtered questions
