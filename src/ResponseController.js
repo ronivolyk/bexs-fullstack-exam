@@ -3,6 +3,14 @@ import express from 'express';
 const router = express.Router();
 
 router.use((req, res, next) => {
+    if (req.error) {
+        next(req.error)
+    } else {
+        next()
+    }
+})
+
+router.use((req, res, next) => {
     let statusCode = 200;
 
     if (req.result && req.result.statusCode) {
@@ -18,12 +26,12 @@ router.use((req, res, next) => {
 })
 
 router.use((err, req, res, next) => {
-    let statusCode = 500;
+    let statusCode = err.status || 500;
 
     console.log(`${new Date()} - Error request: { method: ${req.method}, url: ${req.url}, statusCode: ${statusCode}, error: ${err} }`);
     console.log(`Error: ${err.stack}`);
 
-    res.status(statusCode).send({ error: `${err.name}: ${err.message}` });
+    res.status(statusCode).send(err.message);
 })
 
 export default router;

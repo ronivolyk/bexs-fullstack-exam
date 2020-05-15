@@ -9,20 +9,22 @@ router.route(CONTROLLER_NAME)
     .post(async (req, res, next) => {
         try {
             req.result = await service.insert(req.params.questionId, req.body);
-            next();
         } catch (err) {
-            next(err);
+            req.error = err;
         }
+
+        next();
     })
 
 router.route(`${CONTROLLER_NAME}/:position/like`)
     .post(async (req, res, next) => {
         try {
             req.result = await service.like(req.params.questionId, req.params.position);
-            next();
         } catch (err) {
-            next(err);
+            req.error = err;
         }
+
+        next();
     })
 
 export default router;

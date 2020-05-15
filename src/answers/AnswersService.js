@@ -6,22 +6,37 @@ const COLLECTION_NAME = 'questions';
 
 const collection = mongoCollection(COLLECTION_NAME);
 
-export async function insert(questionId, answer) {
-    const question = await questionsService.findById(questionId);
+export async function insert(questionId, { answer, user }) {
+    if (!answer || !answer.trim()) {
+        const error = new Error('Answer text must not be empty')
+        error.status = 400
+        throw error
+    }
 
-    const document = getDocument(answer);
+    if (!user || !user.trim()) {
+        const error = new Error('User must not be empty')
+        error.status = 400
+        throw error
+    }
+    
+    const question = await questionsService.findById(questionId);
+    
+    answer = answer.trim();
+    user = user.trim();
+
+    const newAnswer = { answer, user };
 
     question.numberOfAnswers++;
 
-    document.position = question.numberOfAnswers;
-    document.creationDate = new Date();
-    document.likes = 0;
+    newAnswer.position = question.numberOfAnswers;
+    newAnswer.creationDate = new Date();
+    newAnswer.likes = 0;
 
     if (!question.answers) {
         question.answers = [];
     }
 
-    question.answers.push(document);
+    question.answers.push(newAnswer);
 
     const _id = { _id: new ObjectId(questionId) };
 
@@ -40,8 +55,3 @@ export async function like(questionId, answerPosition) {
 
     await collection.incrementOne(queryObject, updateObject);
 }
-
-const getDocument = ({ answer, user }) => Object.assign({},
-    { answer },
-    { user }
-);

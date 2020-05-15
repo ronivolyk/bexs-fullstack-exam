@@ -14,14 +14,29 @@ export async function findById(questionId) {
     return await collection.findOne({ _id: new ObjectId(questionId) });
 }
 
-export async function insert(question) {
-    const document = getDocument(question);
+export async function insert({ question, user }) {
+    if (!question || !question.trim()) {
+        const error = new Error('Question text must not be empty');
+        error.status = 400;
+        throw error;
+    }
 
-    document.creationDate = new Date();
-    document.numberOfAnswers = 0;
-    document.likes = 0;
+    if (!user || !user.trim()) {
+        const error = new Error('User must not be empty');
+        error.status = 400;
+        throw error;
+    }
 
-    return await collection.insertOne(document);
+    question = question.trim();
+    user = user.trim();
+    
+    const newQuestion = { question, user };
+
+    newQuestion.creationDate = new Date();
+    newQuestion.numberOfAnswers = 0;
+    newQuestion.likes = 0;
+
+    return await collection.insertOne(newQuestion);
 }
 
 export async function like(questionId) {
@@ -29,11 +44,6 @@ export async function like(questionId) {
 
     await collection.incrementOne(_id, { likes: 1 });
 }
-
-const getDocument = ({ question, user }) => Object.assign({},
-    { question },
-    { user }
-);
 
 const getSearchObject = ({ search, hideAnswered }) => Object.assign({},
     search ? { question: { $regex: search.trim().replace(/[\?\.]/g, ''), $options: 'i' } } : {},
